@@ -3,6 +3,8 @@
   import { variables } from "$lib/class/variable";
   import type { Vec2 } from "$lib/class/vec2";
   import { isDialogInputOpen } from "$lib/store";
+  import { register } from "@tauri-apps/api/globalShortcut";
+  import { onMount } from "svelte";
   import { fade } from "svelte/transition";
 
   export let input_size: Vec2;
@@ -13,38 +15,42 @@
 
   let mode = "text";
   let border = "border-none";
-  $: {
-    if (mode == "text") {
-      border = "border-none";
-    } else if (mode == "var") {
-      border = "border-2 border-success";
-    } else if (mode == "func") {
-      border = "border-2 border-warning";
-    } else if (mode == "error") {
-      border = "border-2 border-danger";
-    }
-  }
-
-  $: {
-    input.target?.focus();
-  }
-
   let draggover = false;
+  //$: {
+  //  input.target?.focus();
+  //}
 
-  let n_id: string = "";
-
-  function onKeyDown(e: any) {
-    if (e.repeat) return;
-    if (e.key == "Escape") {
+  onMount(async () => {
+    console.log("mulit",value)
+    /* TODO : mettre les shortcuts dans un composant input
+    await register("Escape", () => {
+      console.log("escape from input");
       input.isWriteMode = false;
       $isDialogInputOpen = input.isWriteMode;
-    }
+    });
 
-    if (e.key == "Enter") {
+    await register("Enter", () => {
       if (!isInputValid(input.value)) return;
       $isDialogInputOpen = false;
       input.isWriteMode = false;
       value = input.value;
+    });
+    */
+  });
+
+  function updateMode(id: string) {
+    if (id.startsWith("var")) {
+      mode = "var";
+      border = "border-2 border-success";
+    } else if (id.startsWith("func")) {
+      mode = "func";
+      border = "border-2 border-warning";
+    } else if (id.startsWith("error")) {
+      mode = "error";
+      border = "border-2 border-danger";
+    } else {
+      mode = "text";
+      border = "border-none";
     }
   }
 </script>
@@ -66,10 +72,7 @@
       } else {
         input.value = data;
         if (typeof input.value.id == "string") {
-          n_id = data.id;
-          n_id.startsWith("var") && (mode = "var");
-          n_id.startsWith("func") && (mode = "func");
-          n_id.startsWith("error") && (mode = "error");
+          updateMode(data.id);
         } else {
           mode = "text";
         }
@@ -115,5 +118,3 @@
     </div>
   </div>
 {/if}
-
-<svelte:window on:keydown={onKeyDown} />

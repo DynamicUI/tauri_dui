@@ -14,6 +14,7 @@
   import VariableDeclaration from "$lib/actionBlocks/VariableDeclaration.svelte";
 
   let isSaving: boolean = false;
+  /*
   onMount(async () => {
     await register("CommandOrControl+r", () => {
       //actionBlocks = [];
@@ -32,6 +33,7 @@
   onDestroy(async () => {
     unregisterAll();
   });
+    */
 
   export let sequence: any; // From rust
   let actionBlocks: any[] = [];
@@ -51,6 +53,16 @@
     // TODO backend
     //actionBlock = [...actionBlock, new V];
   }
+
+  function badgeColor(actionBlock: any) {
+    if (actionBlock.data.VariableDeclaration) {
+      return "bg-success";
+    } else if (actionBlock.data.FunctionCall) {
+      return "bg-warning";
+    } else if (actionBlock.data.FunctionDeclaration) {
+      return "bg-white";
+    }
+  }
 </script>
 
 id: {sequence.id} context: {sequence.context}
@@ -60,11 +72,8 @@ id: {sequence.id} context: {sequence.context}
     {#each sequence.actions as actionBlock (actionBlock.id)}
       <div animate:flip={{ duration: 150 }} transition:fade={{ duration: 150 }}>
         <div class="flex items-center mb-10">
-          <!--
           <span
-            class="badge {actionBlock instanceof Variable
-              ? 'bg-success'
-              : 'bg-warning'}"
+            class="badge {badgeColor(actionBlock)}"
             draggable="true"
             on:dragstart={(event) => {
               event?.dataTransfer?.setData(
@@ -73,7 +82,6 @@ id: {sequence.id} context: {sequence.context}
               );
             }}
           />
-          -->
 
           {#if actionBlock.data.VariableDeclaration}
             <VariableDeclaration

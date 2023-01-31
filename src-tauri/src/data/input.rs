@@ -1,10 +1,11 @@
-use crate::sequence::Sequence;
+use crate::{action::function_call::FunctionCall, sequence::Sequence};
 
 #[derive(serde::Deserialize, serde::Serialize, Clone, Debug)]
 pub enum Input {
     Text(String),
     Lambda(Sequence),
-    Variable(String), // TODO un string ? pour l'id ?
+    Variable(String),           // TODO un string ? pour l'id ?
+    FunctionCall(FunctionCall), // TODO name and args ?
 }
 
 impl Input {

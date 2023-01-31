@@ -12,6 +12,7 @@ export enum VarType {
 
 export const variables = writable(new Map<string, Variable>());
 export const variable_names = writable(new Set<string>(['']));
+
 variable_names.subscribe((names) => {
 	console.log('variable_names', names);
 });

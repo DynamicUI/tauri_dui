@@ -4,6 +4,7 @@
 )]
 mod sequence;
 mod action;
+mod data;
 use sequence::*;
 use tauri::Manager;
 

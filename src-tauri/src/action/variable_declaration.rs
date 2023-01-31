@@ -1,4 +1,4 @@
-use super::input::Input;
+use crate::data::input::Input;
 
 #[derive(serde::Deserialize, serde::Serialize, Clone, Debug)]
 pub struct VariableDeclaration {

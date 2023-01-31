@@ -1,5 +1,4 @@
-use super::super::Sequence;
-use crate::action::arg::Arg;
+use crate::{data::arg::Arg, sequence::Sequence};
 
 #[derive(serde::Deserialize, serde::Serialize, Clone, Debug)]
 pub struct FunctionDeclaration {

@@ -1,7 +1,7 @@
-use crate::action::action::ActionData;
-use crate::action::{
-    action::Action, function_call::FunctionCall, input::Input,
-    variable_declaration::VariableDeclaration,
+use crate::{
+    action::variable_declaration::VariableDeclaration,
+    action::{Action, ActionData},
+    data::input::Input,
 };
 use std::collections::HashMap;
 use std::sync::Mutex;
@@ -20,6 +20,10 @@ pub struct Sequence {
     id: usize,
     context: Context,
     actions: Vec<Action>,
+    /* TODO : est-ce que c'est géré ici ou par l'exécuteur ?
+    scope_variables: Vec<String>,
+    scope_functions: Vec<String>,
+    */
 }
 
 pub struct SequencesState(Mutex<HashMap<usize, Sequence>>);
@@ -39,12 +43,21 @@ impl Default for SequencesState {
                         0,
                     ),
                     Action::new(
-                        ActionData::FunctionCall(FunctionCall::new(
-                            "print".to_string(),
-                            vec![Input::from_variable("greeting".to_string())],
+                        ActionData::VariableDeclaration(VariableDeclaration::new(
+                            "copy".to_string(),
+                            Input::from_variable("greeting".to_string()),
                         )),
-                        1,
+                        2,
                     ),
+                    /*
+                        Action::new(
+                            ActionData::FunctionCall(FunctionCall::new(
+                                "print".to_string(),
+                                vec![Input::from_variable("greeting".to_string())],
+                            )),
+                            1,
+                        ),
+                    */
                 ],
             },
         )])))
