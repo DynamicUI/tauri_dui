@@ -1,13 +1,13 @@
 <script lang="ts">
+	export let addVariableDecl: Function;
+	export let addFunctionCall: Function;
 </script>
 
 <div class="btn-group flex justify-center">
   <div class="tooltip" data-tip="Add a variable declaration">
     <button
       class="btn"
-      on:click={() => {
-        //actionBlocks = [...actionBlocks, new Variable("", undefined, 0)];
-      }}
+      on:click={addVariableDecl}
     >
       <span class="badge bg-success" />
     </button>
@@ -15,9 +15,7 @@
   <div class="tooltip" data-tip="Add a function call">
     <button
       class="btn"
-      on:click={() => {
-        //actionBlocks = [...actionBlocks, new Function_("fn_Name")];
-      }}
+      on:click={addFunctionCall}
     >
       <span class="badge bg-warning" />
     </button>

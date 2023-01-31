@@ -1,19 +1,21 @@
+use crate::action::action::Action;
 use std::collections::HashMap;
 use std::sync::Mutex;
 
 #[derive(serde::Deserialize, serde::Serialize, Copy, Clone, Debug)]
 pub enum Context {
-    LambdaFunction,
     Main,
     FunctionBody,
+    LambdaFunction,
     ControlFlowBody,
 }
 
-#[derive(serde::Deserialize, serde::Serialize, Copy, Clone, Debug)]
+#[derive(serde::Deserialize, serde::Serialize, Clone, Debug)]
 pub struct Sequence {
     #[serde(default)]
     id: usize,
     context: Context,
+    actions: Vec<Action>,
 }
 
 pub struct SequencesState(Mutex<HashMap<usize, Sequence>>);
@@ -24,6 +26,7 @@ impl Default for SequencesState {
             Sequence {
                 id: 0,
                 context: Context::Main,
+                actions: vec![Action::VariableDeclaration, Action::FunctionCall],
             },
         )])))
     }
@@ -39,13 +42,10 @@ pub fn get_sequence_by_id(
     sequence_id: usize,
     sequences: tauri::State<SequencesState>,
 ) -> Option<Sequence> {
-    sequences
-        .0
-        .lock()
-        .unwrap()
-        .get(&sequence_id)
-        .clone()
-        .copied()
+    match sequences.0.lock().unwrap().get(&sequence_id) {
+        Some(sequence) => Some(sequence.clone()),
+        None => None,
+    }
 }
 
 #[tauri::command]

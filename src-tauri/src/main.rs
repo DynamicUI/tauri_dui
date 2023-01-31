@@ -3,6 +3,7 @@
     windows_subsystem = "windows"
 )]
 mod sequence;
+mod action;
 use sequence::*;
 use tauri::Manager;
 
@@ -26,3 +27,4 @@ fn main() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+

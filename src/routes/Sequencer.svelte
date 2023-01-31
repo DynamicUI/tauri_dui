@@ -4,6 +4,7 @@
    * It can be used as lambda function, function declaration, main function, etc.
    */
   import { register, unregisterAll } from "@tauri-apps/api/globalShortcut";
+  import AddButtonGroup from "./AddButtonGroup.svelte";
   import { onDestroy, onMount } from "svelte";
   import { fade } from "svelte/transition";
   import { flip } from "svelte/animate";
@@ -11,23 +12,13 @@
   import { isDialogInputOpen } from "$lib/stores";
   import { variableDeclarationSize } from "$lib/actionBlocks/defaultValues";
 
-  export let sequence: any; // From rust
-  let actionBlocks: any[] = [];
-
-
-  function delBlock(id: String) {
-    actionBlocks = actionBlocks.filter((actionBlock) => actionBlock.id != id);
-  }
-
-  let isSaving: boolean = false;
-
   onMount(async () => {
     await register("CommandOrControl+r", () => {
       //actionBlocks = [];
       $isDialogInputOpen = false;
     });
     await register("CommandOrControl+a", () => {
-      //actionBlocks = [...actionBlocks, new Variable("", undefined, 0)];
+	  addVariableDecl();
     });
     await register("CommandOrControl+s", () => {
       console.log("Saving");
@@ -37,6 +28,26 @@
   onDestroy(async () => {
     unregisterAll();
   });
+
+  export let sequence: any; // From rust
+  let actionBlocks: any[] = [];
+
+  function delBlock(id: String) {
+    actionBlocks = actionBlocks.filter((actionBlock) => actionBlock.id != id);
+  }
+
+  function addFunctionCall() {
+  console.log("add f call");
+	//actionBlock = [...actionBlock, new F];
+  }
+
+  function addVariableDecl() {
+  console.log("add v call");
+	//actionBlock = [...actionBlock, new V];
+  }
+
+  let isSaving: boolean = false;
+
 </script>
 
 id: {sequence.id} context:  {sequence.context}
@@ -91,6 +102,7 @@ id: {sequence.id} context:  {sequence.context}
       </div>
     {/each}
   </div>
+  <AddButtonGroup {addVariableDecl} {addFunctionCall} />
 </div>
 
 <Alert bind:enabled={isSaving} msg={"You can't save, idiot..."} />
