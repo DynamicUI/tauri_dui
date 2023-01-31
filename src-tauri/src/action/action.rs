@@ -4,9 +4,21 @@ use super::{
 };
 
 #[derive(serde::Deserialize, serde::Serialize, Clone, Debug)]
-pub enum Action {
+pub enum ActionData {
     VariableDeclaration(VariableDeclaration),
     FunctionDeclaration(FunctionDeclaration),
     FunctionCall(FunctionCall),
     ControlFlow(ControlFlow),
+}
+
+#[derive(serde::Deserialize, serde::Serialize, Clone, Debug)]
+pub struct Action {
+    pub data: ActionData,
+    pub id: usize,
+}
+
+impl Action {
+    pub fn new(data: ActionData, id: usize) -> Self {
+        Action { data, id }
+    }
 }

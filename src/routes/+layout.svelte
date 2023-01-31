@@ -1,5 +1,5 @@
 <script>
-  import { currentSequenceId } from "$lib/stores";
+  import { currentSequenceId } from "$lib/store";
   import { onMount } from "svelte";
   import "../app.css";
 

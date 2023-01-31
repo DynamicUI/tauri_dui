@@ -10,8 +10,4 @@ export class Input {
 		this.isWriteMode = isWriteMode;
 		this.name = name;
 	}
-
-	static default(name: string) {
-		return new Input(undefined, false, name);
-	}
 }

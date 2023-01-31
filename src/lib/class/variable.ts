@@ -1,6 +1,5 @@
 import { Vec2 } from '$lib/class/vec2';
 import { writable } from 'svelte/store';
-import type { ConstBoxInfos } from './box';
 
 // specifique a la class Variable
 

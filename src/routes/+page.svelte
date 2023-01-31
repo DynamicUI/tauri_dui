@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { currentSequenceId } from "$lib/stores";
+  import { currentSequenceId } from "$lib/store";
   import KeyBindings from "./KeyBindings.svelte";
   import Sequencer from "./Sequencer.svelte";
 

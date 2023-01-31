@@ -1,4 +1,8 @@
-use crate::action::action::Action;
+use crate::action::action::ActionData;
+use crate::action::{
+    action::Action, function_call::FunctionCall, input::Input,
+    variable_declaration::VariableDeclaration,
+};
 use std::collections::HashMap;
 use std::sync::Mutex;
 
@@ -26,7 +30,22 @@ impl Default for SequencesState {
             Sequence {
                 id: 0,
                 context: Context::Main,
-                actions: vec![Action::VariableDeclaration, Action::FunctionCall],
+                actions: vec![
+                    Action::new(
+                        ActionData::VariableDeclaration(VariableDeclaration::new(
+                            "greeting".to_string(),
+                            Input::from_text("Hello World".to_string()),
+                        )),
+                        0,
+                    ),
+                    Action::new(
+                        ActionData::FunctionCall(FunctionCall::new(
+                            "print".to_string(),
+                            vec![Input::from_variable("greeting".to_string())],
+                        )),
+                        1,
+                    ),
+                ],
             },
         )])))
     }

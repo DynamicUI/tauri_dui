@@ -9,16 +9,20 @@
   import { fade } from "svelte/transition";
   import { flip } from "svelte/animate";
   import Alert from "./Alert.svelte";
-  import { isDialogInputOpen } from "$lib/stores";
+  import { isDialogInputOpen } from "$lib/store";
   import { variableDeclarationSize } from "$lib/actionBlocks/defaultValues";
+  import VariableDeclaration from "$lib/actionBlocks/VariableDeclaration.svelte";
 
+  let isSaving: boolean = false;
   onMount(async () => {
     await register("CommandOrControl+r", () => {
       //actionBlocks = [];
+      // TODO ask first
+      // backend
       $isDialogInputOpen = false;
     });
     await register("CommandOrControl+a", () => {
-	  addVariableDecl();
+      addVariableDecl();
     });
     await register("CommandOrControl+s", () => {
       console.log("Saving");
@@ -37,24 +41,23 @@
   }
 
   function addFunctionCall() {
-  console.log("add f call");
-	//actionBlock = [...actionBlock, new F];
+    console.log("add f call");
+    // TODO backend
+    //actionBlock = [...actionBlock, new F];
   }
 
   function addVariableDecl() {
-  console.log("add v call");
-	//actionBlock = [...actionBlock, new V];
+    console.log("add v call");
+    // TODO backend
+    //actionBlock = [...actionBlock, new V];
   }
-
-  let isSaving: boolean = false;
-
 </script>
 
-id: {sequence.id} context:  {sequence.context}
+id: {sequence.id} context: {sequence.context}
 <div class="bg-neutral items-center  rounded-2xl justify-center">
   <div style="width: {variableDeclarationSize.x * 1.9}px;" />
   <div class="flex  flex-col p-16 overflow-scroll h-[80vh] items-center">
-    {#each actionBlocks as actionBlock (actionBlock.id)}
+    {#each sequence.actions as actionBlock (actionBlock.id)}
       <div animate:flip={{ duration: 150 }} transition:fade={{ duration: 150 }}>
         <div class="flex items-center mb-10">
           <!--
@@ -70,18 +73,25 @@ id: {sequence.id} context:  {sequence.context}
               );
             }}
           />
+          -->
 
+          {#if actionBlock.data.VariableDeclaration}
+            <VariableDeclaration
+              bind:variable={actionBlock.data.VariableDeclaration}
+            />
+          {/if}
+
+          <!--
           {#if actionBlock instanceof Variable}
             <VariableDeclaration bind:variable={actionBlock} {delBlock} />
           {:else if actionBlock instanceof Function_}
             <FunctionCall bind:function_={actionBlock} {delBlock} />
           {/if}
           -->
-          builtin
           <button
             class="btn btn-circle bg-red-400 hover:bg-red-700"
             on:click={() => {
-              delBlock(actionBlock.id);
+              //delBlock(actionBlock.id);
             }}
           >
             <svg
