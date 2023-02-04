@@ -1,68 +1,86 @@
 <script lang="ts">
-  import type { Box } from "$lib/class/box";
-  import { Input } from "$lib/class/input";
-  import { Vec2 } from "$lib/class/vec2";
-  import { onMount } from "svelte";
-  import { Function_ } from "$lib/class/function";
-  import TextInput from "./box/TextInput.svelte";
-  import { isKeyboardOpen } from "$lib/store";
-  import { builtins, getParamNames } from "$lib/builtins";
-  import MulitInput from "./box/MulitInput.svelte";
+	import type { Box } from '$lib/class/box';
+	import { Input } from '$lib/class/input';
+	import { Vec2 } from '$lib/class/vec2';
+	import { onMount } from 'svelte';
+	import { Function_ } from '$lib/class/function';
+	//import TextInput from './box/TextInput.svelte';
+	import { isDialogInputOpen } from '$lib/store';
+	import { MulitInput, TextInput } from '$lib/dataBlocks';
+	import { variableDeclarationSize } from './defaultValues';
+	//import { builtins, getParamNames } from '$lib/builtins';
+	//import MulitInput from './box/MulitInput.svelte';
 
-  export let function_: Function_;
+	export let function_: any;
+	export let actionId: number;
 
-  let input_name: Input = Input.default("name");
+	let input_size: Vec2 = new Vec2(
+		variableDeclarationSize.x / 2 - 10,
+		variableDeclarationSize.y - 20
+	);
 
-  onMount(() => {
-    input_name.isWriteMode = true;
-    $isKeyboardOpen = true;
-  });
+	let inputName: Input = {
+		target: undefined,
+		isWriteMode: false,
+		value: '',
+		isFocus: false
+	};
 
-  function onKeyDown(e: any) {
-    if (e.repeat) return;
+	onMount(() => {
+		//inputName.isWriteMode = true;
+		//$isDialogInputOpen = true;
+	});
 
-    if (e.key == "Escape") {
-      if (!doesFnExist(function_.name)) return;
-      $isKeyboardOpen = false;
-      input_name.isWriteMode = false;
-    }
+	function validateNameInput(value: any) {
+		if (doesFnExist(value)) return;
+		// TODO change
+	}
 
-    if (e.key == "Enter") {
-      if (!doesFnExist(input_name.value)) return;
-      if (input_name.isWriteMode) function_.name = input_name.value;
-      $isKeyboardOpen = false;
-      input_name.isWriteMode = false;
-      function_.args = Function_.fromBuiltIn(function_.name) || [];
-    }
-  }
+	function isVarNameValid(name: string): boolean {
+		return !doesFnExist(name);
+	}
 
-  function doesFnExist(name: string): boolean {
-    return builtins.has(name);
-  }
+	function doesFnExist(name: string): boolean {
+		//return builtins.has(name);
+		return false;
+	}
+
+
+	function validateArgInput() {
+		return true;
+	}
+
+	function isArgInputValide(value: string): boolean {
+		return true;
+	}
 </script>
 
 <div
-  style="width:{box.size.x}px; height:{box.size.y}px;"
-  class="bg-base-100 flex flex-row rounded-3xl mx-5 justify-center items-center"
+	style:width="{variableDeclarationSize.x}px"
+	style:height="{variableDeclarationSize.y}px"
+	class="bg-base-100 flex flex-row rounded-3xl mx-5 justify-center items-center"
 >
-  <TextInput
-    bind:value={function_.name}
-    bind:input_size
-    bind:input={input_name}
-    isInputValid={doesFnExist}
-  />
+	<TextInput
+		bind:input={inputName}
+		bind:input_size
+		bind:value={function_.name}
+		giveInput={validateNameInput}
+		isInputValid={isVarNameValid}
+	/>
 
-  {#each function_.args as arg}
-    <MulitInput
-      bind:input={arg.input}
-      bind:input_size
-      bind:value={arg.input.value}
-      id={""}
-      isInputValid={function () {
-        return true;
-      }}
-    />
-  {/each}
+	{#each function_.args as arg}
+		{arg}
+		{arg.Variable}
+		<!-- 
+		<MulitInput
+			bind:input={arg.input_value}
+			bind:input_size
+			bind:value={arg.variable.input}
+			{actionId}
+			giveInput={validateArgInput}
+			isInputValid={isArgInputValide}
+		/>
+
+			OLD-->
+	{/each}
 </div>
-
-<svelte:window on:keydown={onKeyDown} />

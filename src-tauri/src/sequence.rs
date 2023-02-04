@@ -1,6 +1,6 @@
 use crate::{
     action::variable_declaration::VariableDeclaration,
-    action::{Action, ActionData},
+    action::{Action, ActionData, function_call::FunctionCall},
     data::input::Input,
 };
 use std::collections::HashMap;
@@ -49,7 +49,6 @@ impl Default for SequencesState {
                         )),
                         2,
                     ),
-                    /*
                         Action::new(
                             ActionData::FunctionCall(FunctionCall::new(
                                 "print".to_string(),
@@ -57,7 +56,6 @@ impl Default for SequencesState {
                             )),
                             1,
                         ),
-                    */
                 ],
             },
         )])))

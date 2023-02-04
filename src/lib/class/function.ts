@@ -1,38 +1,38 @@
 //import { builtins, getParamNames } from '$lib/builtins';
-import { Vec2 } from "./vec2";
-import type { Input } from "./input";
+import { Vec2 } from './vec2';
+import type { Input } from './input';
 
 // specifique a la class Variable
 
 export enum VarType {
-  INT,
-  STRING,
-  FLOAT,
-  OTHER,
+	INT,
+	STRING,
+	FLOAT,
+	OTHER
 }
 
 /// Class specifique qui contient tout ce qui concerne les Box Varibles
 export class Function_ {
-  id: string;
-  name: string;
-  args: {
-    name: string;
-    type: string;
-    value: any;
-    draggover: boolean;
-    input: Input;
-  }[] = [];
-  body: any[] = [];
+	id: string;
+	name: string;
+	args: {
+		name: string;
+		type: string;
+		value: any;
+		draggover: boolean;
+		input: Input;
+	}[] = [];
+	body: any[] = [];
 
-  constructor(name: string) {
-    this.id =
-      `function_${Function_.quantity}_` +
-      (Date.now() / 1000000 - Function_.quantity).toFixed().toString();
-    this.name = name;
-    Function_.quantity += 1;
-  }
+	constructor(name: string) {
+		this.id =
+			`function_${Function_.quantity}_` +
+			(Date.now() / 1000000 - Function_.quantity).toFixed().toString();
+		this.name = name;
+		Function_.quantity += 1;
+	}
 
-  /*
+	/*
 	static fromBuiltIn(builtinName: string) {
 		//let fn: Function | undefined = builtins.get(builtinName);
 		//if (!fn) return undefined;
@@ -50,19 +50,19 @@ export class Function_ {
 	}
 	*/
 
-  static CONST_BOX_INFOS: any = {
-    //FIXED_COLOR: 'black',
-    //DRAGGING_COLOR: 'red',
-    //BACKGROUD_COLOR: 'bg-teal-100',
-    //SHADOW_COLOR: 'grey',
-    //SHADOW_BLUR: 5,
-    //FIXED_SHADOW: 0,
-    //DRAGGING_DELTA: 4,
-    BASIC_BOX_SIZE: new Vec2(300, 100),
-    //GAP: 20
-  };
+	static CONST_BOX_INFOS: any = {
+		//FIXED_COLOR: 'black',
+		//DRAGGING_COLOR: 'red',
+		//BACKGROUD_COLOR: 'bg-teal-100',
+		//SHADOW_COLOR: 'grey',
+		//SHADOW_BLUR: 5,
+		//FIXED_SHADOW: 0,
+		//DRAGGING_DELTA: 4,
+		BASIC_BOX_SIZE: new Vec2(300, 100)
+		//GAP: 20
+	};
 
-  static quantity = 0;
+	static quantity = 0;
 }
 
 /* reflection sur comment s'occuper de tous ces blocks:
