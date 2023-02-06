@@ -1,12 +1,9 @@
 <script lang="ts">
 	import DialogInput from './DialogInput.svelte';
-
 	import type { Input } from '$lib/class/input';
-	import type { Vec2 } from '$lib/class/vec2';
 	import { isDialogInputOpen } from '$lib/store';
 	import { onMount } from 'svelte';
 
-	export let input_size: Vec2;
 	export let value: string;
 	export let input: Input;
 	export let isInputValid: Function;
@@ -15,10 +12,11 @@
 	let activateInput: any;
 
 	$: if (input?.target) {
-		input.target.focus();
+		input?.target.focus();
 	}
+
 	onMount(async () => {
-		if (!isInputValid(value)) {
+		if (!(await isInputValid(value))) {
 			input.isWriteMode = true;
 			$isDialogInputOpen = true;
 		}

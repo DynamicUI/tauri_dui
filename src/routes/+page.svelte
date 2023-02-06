@@ -1,20 +1,10 @@
 <script lang="ts">
-	import { currentSequenceId } from '$lib/store';
-	import KeyBindings from './KeyBindings.svelte';
-	import { Sequencer } from '$lib/actionBlocks';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
-	export let data: any;
-
-	function isCurrentSequenceMain(): boolean {
-		return $currentSequenceId === 0;
-	}
-
-	const currentSequence = null; // TODO
+	onMount(async () => {
+		await goto('/sequence');
+	});
 </script>
 
-<KeyBindings />
-{#if isCurrentSequenceMain()}
-	<Sequencer sequence={data.mainSequence} />
-{:else}
-	<!--	<Sequencer sequence={currentSequence} />-->
-{/if}
+<a href="/sequence"> GO </a>

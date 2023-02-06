@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { AddButton } from '$lib/components/index';
+	import { invoke } from '@tauri-apps/api';
 
 	export let addVariableDecl: Function | null;
 	export let addFunctionCall: Function | null;
@@ -10,7 +11,12 @@
 	<AddButton dataTip="Add a function call" onClick={addFunctionCall} bgColor="bg-warning" />
 	<AddButton dataTip="Add a control flow" onClick={() => {}} bgColor="bg-error" />
 	<div class="tooltip" data-tip="run">
-		<button class="btn">
+		<button
+			class="btn"
+			on:click={async () => {
+				await invoke('run');
+			}}
+		>
 			<svg
 				class="fill-white"
 				width="20px"

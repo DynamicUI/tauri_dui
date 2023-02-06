@@ -11,34 +11,48 @@
 	export let actionId: number;
 	export let giveInput: Function;
 
-	let activateInput: any;
-	let mode = 'text';
-	let border = 'border-none';
-	let dragover = false;
-	//$: {
-	//  input.target?.focus();
-	//}
+	let activateInput: Function; // est bind en dessous
+	let mode: string = 'text'; // LATER: enum
+	let border: string = 'border-none';
+	let dragover: boolean = false;
 
 	onMount(async () => {
-		console.log('multiinput mount value: ', value);
 		if (value == undefined) {
+			input.value = '';
 			mode = 'none';
+		} else if (value.Text) {
+			input.value = value.Text;
+			mode = 'text';
+		} else if (value.Variable) {
+			input.value = value.Variable;
+			mode = 'var';
 		}
+		updateFromMode();
 	});
+
+	function updateFromMode() {
+		if (mode === 'text') {
+			border = 'border-none';
+		} else if (mode === 'var') {
+			border = 'border-2 border-success';
+		} else if (mode === 'func') {
+			border = 'border-2 border-warning';
+		} else if (mode === 'lambda') {
+			border = 'border-none';
+		}
+	}
 
 	async function setDataFromDrop(data: any) {
 		if (data.VariableDeclaration) {
 			mode = 'var';
-			border = 'border-2 border-success';
 			input.value = data.VariableDeclaration.name;
 		} else if (data.FunctionCall) {
 			mode = 'func'; // Donc ici c'est un function call
-			border = 'border-2 border-warning';
 			input.value = data.FunctionCall.name;
 		} else {
 			mode = 'text';
-			border = 'border-none';
 		}
+		updateFromMode();
 	}
 
 	async function onDrop(event: any) {

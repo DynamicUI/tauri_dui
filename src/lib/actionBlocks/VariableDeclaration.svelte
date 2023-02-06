@@ -2,17 +2,17 @@
 	import { Variable, variables, variable_names } from '$lib/class/variable';
 	import { Input, Vec2 } from '$lib/class';
 	import { variableDeclarationSize } from './defaultValues';
-	import { MulitInput, TextInput } from '$lib/dataBlocks';
+	import { MultiInput, TextInput } from '$lib/dataBlocks';
+	import { invoke } from '@tauri-apps/api';
+	import { currentSequenceId } from '$lib/store';
+	import { onMount } from 'svelte';
 
 	export let variable: any;
 	export let actionId: number;
-	console.log('variable', variable);
-	console.log('actionId', actionId);
+	onMount(() => {
+		console.info('variableDeclaration onMount', variable.name);
+	});
 
-	let input_size: Vec2 = new Vec2(
-		variableDeclarationSize.x / 2 - 10,
-		variableDeclarationSize.y - 20
-	);
 	let inputName: Input = {
 		target: undefined,
 		isWriteMode: false,
@@ -46,49 +46,40 @@
 		return str.length == 0;
 	}
 
-	function varAlreadyExist(name: string): boolean {
-		// TODO ask rust ?
-		return $variable_names.has(name);
+	async function varAlreadyExist(name: string): Promise<boolean> {
+		if (variable.name == name) return false;
+		// TODO ne pas fetch a chaque fois, le cache ailleurs
+		const sequenceVariables = new Set(
+			await invoke('get_variables_name_in_sequence', {
+				sequenceId: $currentSequenceId
+			})
+		);
+		return sequenceVariables.has(name);
 	}
 
-	function isVarNameValid(name: string): boolean {
+	async function isVarNameValid(name: string): Promise<boolean> {
 		name = name.toLowerCase();
-		return !isEmpty(name) && !varAlreadyExist(name);
+		return !isEmpty(name) && !(await varAlreadyExist(name));
 	}
 
-	// TODO validateVarInput
 	function isVarValValid(value: string): boolean {
 		// TODO
 		return true;
 	}
-
-	/*
-
-  $: {
-    if (typeof variable_value.id == "string") {
-      console.log("variable", variable_value);
-      variable.value = variable_value.id;
-    }
-  }
-  */
 </script>
 
-<!--style:min-width="{variableDeclarationSize.x}px"-->
-<!--style:min-height="{variableDeclarationSize.y}px"-->
 <div
-	class="border- mx-5 flex flex-row items-center justify-center rounded-3xl border-2 border-white bg-base-100 p-2"
+	class="mx-5 flex flex-row items-center justify-center rounded-3xl border-2 border-white bg-base-100 p-2"
 >
 	<TextInput
 		bind:input={inputName}
-		bind:input_size
-		bind:value={variable.name}
+		value={variable.name}
 		giveInput={validateNameInput}
 		isInputValid={isVarNameValid}
 	/>
 
-	<MulitInput
+	<MultiInput
 		bind:input={input_value}
-		bind:input_size
 		bind:value={variable.input}
 		{actionId}
 		giveInput={validateVarInput}

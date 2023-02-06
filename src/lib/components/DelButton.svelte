@@ -1,9 +1,8 @@
 <script lang="ts">
 	export let onClick: any;
-	export let id;
 </script>
 
-<button class="btn btn-circle bg-red-400 hover:bg-red-700" on:click={onClick}>
+<button class="btn-circle btn bg-red-400 hover:bg-red-700" on:click={onClick}>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		class="h-6 w-6 text-black"

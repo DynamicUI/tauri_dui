@@ -2,8 +2,8 @@ use crate::data::input::Input;
 
 #[derive(serde::Deserialize, serde::Serialize, Clone, Debug)]
 pub struct VariableDeclaration {
-    name: String,
-    input: Input,
+    pub name: String,
+    pub input: Input,
 }
 
 impl VariableDeclaration {

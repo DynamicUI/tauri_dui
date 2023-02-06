@@ -20,4 +20,17 @@ impl Input {
     pub fn from_variable(name: String) -> Self {
         Self::Variable(name)
     }
+
+    pub fn from_number(number: f64) -> Self {
+        Self::Text(number.to_string())
+    }
+
+    pub fn printable(&self) -> Option<String> {
+        match self {
+            Self::Text(text) => Some(text.clone()),
+            Self::Lambda(_) => None,
+            Self::Variable(_) => Some("Variable".to_string()),
+            Self::FunctionCall(_) => Some("FunctionCall".to_string()),
+        }
+    }
 }

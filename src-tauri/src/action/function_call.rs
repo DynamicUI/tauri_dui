@@ -1,13 +1,18 @@
 use crate::data::input::Input;
 
-#[derive(serde::Deserialize, serde::Serialize, Clone, Debug)]
+#[derive(serde::Deserialize, serde::Serialize, Clone, Debug, Default)]
 pub struct FunctionCall {
-    name: String,
-    args: Vec<Input>,
+    pub name: String,
+    pub args: Vec<Input>,
+    pub is_variadic: bool,
 }
 
 impl FunctionCall {
     pub fn new(name: String, args: Vec<Input>) -> Self {
-        Self { name, args }
+        Self {
+            name,
+            args,
+            is_variadic: false,
+        }
     }
 }

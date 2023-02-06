@@ -1,34 +1,53 @@
+use crate::action::function_declaration::FunctionDeclaration;
 use crate::{
     action::variable_declaration::VariableDeclaration,
-    action::{Action, ActionData, function_call::FunctionCall},
+    action::{function_call::FunctionCall, Action, ActionData},
     data::input::Input,
 };
 use std::collections::HashMap;
 use std::sync::Mutex;
 
-#[derive(serde::Deserialize, serde::Serialize, Copy, Clone, Debug)]
+#[derive(serde::Deserialize, serde::Serialize, Copy, Clone, Debug, Default)]
 pub enum Context {
+    #[default]
     Main,
     FunctionBody,
     LambdaFunction,
     ControlFlowBody,
 }
 
-#[derive(serde::Deserialize, serde::Serialize, Clone, Debug)]
+#[derive(serde::Deserialize, serde::Serialize, Clone, Debug, Default)]
 pub struct Sequence {
     #[serde(default)]
     id: usize,
     context: Context,
-    actions: Vec<Action>,
-    /* TODO : est-ce que c'est géré ici ou par l'exécuteur ?
-    scope_variables: Vec<String>,
-    scope_functions: Vec<String>,
-    */
+    pub actions: Vec<Action>,
+}
+impl Sequence {
+    pub fn get_user_variables(&self) -> Vec<VariableDeclaration> {
+        let mut res: Vec<VariableDeclaration> = Vec::new();
+        self.actions.iter().for_each(|action| {
+            if let ActionData::VariableDeclaration(declaration) = &action.data {
+                res.push(declaration.clone());
+            };
+        });
+        return res;
+    }
+
+    pub fn get_user_functions(&self) -> Vec<FunctionDeclaration> {
+        let mut res: Vec<FunctionDeclaration> = Vec::new();
+        self.actions.iter().for_each(|action| {
+            if let ActionData::FunctionDeclaration(declaration) = &action.data {
+                res.push(declaration.clone());
+            };
+        });
+        return res;
+    }
 }
 
-pub struct SequencesState(Mutex<HashMap<usize, Sequence>>);
-impl Default for SequencesState {
-    fn default() -> Self {
+pub struct SequencesState(pub Mutex<HashMap<usize, Sequence>>);
+impl SequencesState {
+    pub fn demo() -> Self {
         SequencesState(Mutex::new(HashMap::from([(
             0,
             Sequence {
@@ -49,13 +68,13 @@ impl Default for SequencesState {
                         )),
                         2,
                     ),
-                        Action::new(
-                            ActionData::FunctionCall(FunctionCall::new(
-                                "print".to_string(),
-                                vec![Input::from_variable("greeting".to_string())],
-                            )),
-                            1,
-                        ),
+                    Action::new(
+                        ActionData::FunctionCall(FunctionCall::new(
+                            "print".to_string(),
+                            vec![Input::from_variable("copy".to_string())],
+                        )),
+                        1,
+                    ),
                 ],
             },
         )])))
@@ -84,4 +103,20 @@ pub fn add_sequence(mut sequence: Sequence, sequences: tauri::State<SequencesSta
     let new_id: usize = sequences.0.lock().unwrap().len();
     sequence.id = new_id;
     sequences.0.lock().unwrap().insert(new_id, sequence);
+}
+
+#[tauri::command]
+pub fn get_variables_name_in_sequence(
+    sequence_id: usize,
+    sequences: tauri::State<SequencesState>,
+) -> Vec<String> {
+    let sequence = sequences.0.lock().unwrap();
+    let sequence = sequence.get(&sequence_id).unwrap();
+    let mut variables_name: Vec<String> = Vec::new();
+    sequence.actions.iter().for_each(|action| {
+        if let ActionData::VariableDeclaration(variable_declaration) = &action.data {
+            variables_name.push(variable_declaration.name.clone())
+        }
+    });
+    variables_name
 }

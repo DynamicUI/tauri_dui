@@ -34,7 +34,7 @@
 		// TODO backend
 		sequence.actions = [
 			...sequence.actions,
-			{ id: last_id, data: { VariableDeclaration: { name: 'test' } } }
+			{ id: last_id, data: { VariableDeclaration: { name: '' } } }
 		];
 		last_id += 1;
 	}
