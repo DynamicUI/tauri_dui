@@ -1,15 +1,9 @@
 <script lang="ts">
-	import type { Box } from '$lib/class/box';
 	import { Input } from '$lib/class/input';
 	import { Vec2 } from '$lib/class/vec2';
 	import { onMount } from 'svelte';
-	import { Function_ } from '$lib/class/function';
-	//import TextInput from './box/TextInput.svelte';
-	import { isDialogInputOpen } from '$lib/store';
-	import { MulitInput, TextInput } from '$lib/dataBlocks';
+	import { TextInput } from '$lib/dataBlocks';
 	import { variableDeclarationSize } from './defaultValues';
-	//import { builtins, getParamNames } from '$lib/builtins';
-	//import MulitInput from './box/MulitInput.svelte';
 
 	export let function_: any;
 	export let actionId: number;
@@ -45,7 +39,6 @@
 		return false;
 	}
 
-
 	function validateArgInput() {
 		return true;
 	}
@@ -55,10 +48,10 @@
 	}
 </script>
 
+<!--style:min-width="{variableDeclarationSize.x}px"-->
+<!--style:min-height="{variableDeclarationSize.y}px"-->
 <div
-	style:width="{variableDeclarationSize.x}px"
-	style:height="{variableDeclarationSize.y}px"
-	class="bg-base-100 flex flex-row rounded-3xl mx-5 justify-center items-center"
+	class="mx-5 flex flex-row items-center justify-center rounded-3xl bg-base-100"
 >
 	<TextInput
 		bind:input={inputName}

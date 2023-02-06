@@ -26,9 +26,7 @@
 </script>
 
 <button
-	class="btn bg-inherit border-none"
-	style:width="{input_size.x}px"
-	style:height="{input_size.y}px"
+	class="btn border-none bg-inherit"
 	on:click={async () => {
 		await activateInput();
 	}}

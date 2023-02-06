@@ -34,7 +34,7 @@
 </script>
 
 {#if input.isWriteMode}
-	<div class="modal modal-middle modal-open" transition:fade={{ duration: 100 }}>
+	<div class="modal modal-open modal-middle" transition:fade={{ duration: 100 }}>
 		<div class="modal-box">
 			<input
 				transition:fade
@@ -42,7 +42,7 @@
 				bind:this={input.target}
 				type="text"
 				class:border-error={!isInputValid(input.value)}
-				class="input input-bordered w-full border-error"
+				class="input-bordered input w-full border-error"
 				placeholder="Variable name"
 			/>
 		</div>

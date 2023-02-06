@@ -1,15 +1,10 @@
 <script lang="ts">
 	import type { Input } from '$lib/class/input';
-	import { variables } from '$lib/class/variable';
-	import type { Vec2 } from '$lib/class/vec2';
-	import { isDialogInputOpen } from '$lib/store';
-	import { register } from '@tauri-apps/api/globalShortcut';
 	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
 	import { message } from '@tauri-apps/api/dialog';
 	import DialogInput from './DialogInput.svelte';
+	import { ToggleSequence } from '$lib/actionBlocks';
 
-	export let input_size: Vec2;
 	export let value: any;
 	export let input: Input;
 	export let isInputValid: Function;
@@ -19,27 +14,16 @@
 	let activateInput: any;
 	let mode = 'text';
 	let border = 'border-none';
-	let draggover = false;
+	let dragover = false;
 	//$: {
 	//  input.target?.focus();
 	//}
 
 	onMount(async () => {
 		console.log('multiinput mount value: ', value);
-		/* TODO : mettre les shortcuts dans un composant input
-    await register("Escape", () => {
-      console.log("escape from input");
-      input.isWriteMode = false;
-      $isDialogInputOpen = input.isWriteMode;
-    });
-
-    await register("Enter", () => {
-      if (!isInputValid(input.value)) return;
-      $isDialogInputOpen = false;
-      input.isWriteMode = false;
-      value = input.value;
-    });
-    */
+		if (value == undefined) {
+			mode = 'none';
+		}
 	});
 
 	async function setDataFromDrop(data: any) {
@@ -59,7 +43,7 @@
 
 	async function onDrop(event: any) {
 		event.preventDefault();
-		draggover = false;
+		dragover = false;
 		const json = event?.dataTransfer?.getData('dragDatas');
 		if (!json) {
 			return;
@@ -76,38 +60,67 @@
 			await setDataFromDrop(data.data);
 		}
 	}
-
-	function getPrintableValue() {}
 </script>
 
 <div
 	on:dragenter={(event) => {
-		draggover = true;
+		dragover = true;
 		console.log('dragenter', event);
 	}}
-	on:dragleave={(event) => {
-		draggover = false;
+	on:dragleave={() => {
+		dragover = false;
 	}}
 	on:drop={onDrop}
 	ondragover="return false"
+	class="p-5"
 >
-	<button
-		disabled={draggover}
-		class="btn bg-inherit {border}"
-		style:width="{input_size.x}px"
-		style:height="{input_size.y}px"
-		on:click={async () => {
-			await activateInput();
-		}}
-	>
-		{#if mode == 'var'}
-			$[{input.value}]
-		{:else if mode == 'func'}
-			{input.value}()
-		{:else if mode == 'text'}
-			"{input.value}"
-		{/if}
-	</button>
+	{#if mode === 'none'}
+		<div class="grid min-w-fit grid-cols-2 {dragover ? 'bg-black' : ''}">
+			<button
+				class="btn border-none bg-inherit"
+				on:click={async () => {
+					await activateInput();
+					mode = 'text';
+					input.value = '';
+				}}
+				>""
+			</button>
+			<button
+				class="btn border-none bg-inherit"
+				on:click={async () => {
+					//await activateInput();
+				}}
+			>
+				x()
+			</button>
+			<button
+				class="btn border-none bg-inherit"
+				on:click={() => {
+					mode = 'lambda';
+				}}
+			>
+				{'{}'}
+			</button>
+		</div>
+	{:else if mode === 'text' || mode === 'var' || mode === 'func'}
+		<button
+			disabled={dragover}
+			class="btn bg-inherit {border}"
+			on:click={async () => {
+				await activateInput();
+			}}
+		>
+			{#if mode === 'var'}
+				$[{input.value}]
+			{:else if mode === 'func'}
+				{input.value}()
+			{:else if mode === 'text'}
+				"{input.value}"
+			{/if}
+		</button>
+	{:else if mode === 'lambda'}
+		<ToggleSequence sequence={{ actions: [], id: 43 }} />
+	{/if}
 </div>
 
 <DialogInput bind:activateInput {value} {giveInput} {isInputValid} bind:input />

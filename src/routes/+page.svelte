@@ -1,20 +1,20 @@
 <script lang="ts">
 	import { currentSequenceId } from '$lib/store';
 	import KeyBindings from './KeyBindings.svelte';
-	import Sequencer from './Sequencer.svelte';
+	import { Sequencer } from '$lib/actionBlocks';
 
 	export let data: any;
+
+	function isCurrentSequenceMain(): boolean {
+		return $currentSequenceId === 0;
+	}
+
+	const currentSequence = null; // TODO
 </script>
 
-{#if $currentSequenceId == 0}
-	<div class="w-full h-screen flex justify-center items-center ">
-		<KeyBindings />
-		<Sequencer sequence={data.mainSequence} />
-		<div class="w-96 m-10" />
-	</div>
+<KeyBindings />
+{#if isCurrentSequenceMain()}
+	<Sequencer sequence={data.mainSequence} />
 {:else}
-	<div class="w-full h-screen flex justify-center items-center ">
-		<!--TODO-->
-		wtf
-	</div>
+	<!--	<Sequencer sequence={currentSequence} />-->
 {/if}

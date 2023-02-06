@@ -16,12 +16,12 @@
 {#if enabled}
 	<div
 		transition:fade={{ duration: 180 }}
-		class="alert alert-error shadow-lg absolute top-8 left-[38vw] w-96"
+		class="alert alert-error absolute top-8 left-[38vw] w-96 shadow-lg"
 	>
 		<div>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
-				class="stroke-current flex-shrink-0 h-6 w-6"
+				class="h-6 w-6 flex-shrink-0 stroke-current"
 				fill="none"
 				viewBox="0 0 24 24"
 				><path

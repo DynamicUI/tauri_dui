@@ -1,24 +1,14 @@
 <script lang="ts">
-	export let addVariableDecl: Function;
-	export let addFunctionCall: Function;
+	import { AddButton } from '$lib/components/index';
+
+	export let addVariableDecl: Function | null;
+	export let addFunctionCall: Function | null;
 </script>
 
 <div class="btn-group flex justify-center">
-	<div class="tooltip" data-tip="Add a variable declaration">
-		<button class="btn" on:click={addVariableDecl}>
-			<span class="badge bg-success" />
-		</button>
-	</div>
-	<div class="tooltip" data-tip="Add a function call">
-		<button class="btn" on:click={addFunctionCall}>
-			<span class="badge bg-warning" />
-		</button>
-	</div>
-	<div class="tooltip" data-tip="">
-		<button class="btn">
-			<span class="badge bg-error" />
-		</button>
-	</div>
+	<AddButton dataTip="Add a variable declaration" onClick={addVariableDecl} bgColor="bg-success" />
+	<AddButton dataTip="Add a function call" onClick={addFunctionCall} bgColor="bg-warning" />
+	<AddButton dataTip="Add a control flow" onClick={() => {}} bgColor="bg-error" />
 	<div class="tooltip" data-tip="run">
 		<button class="btn">
 			<svg

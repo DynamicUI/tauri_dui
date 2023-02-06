@@ -1,14 +1,6 @@
-import { Vec2 } from '$lib/class/vec2';
 import { writable } from 'svelte/store';
 
 // specifique a la class Variable
-
-export enum VarType {
-	INT,
-	STRING,
-	FLOAT,
-	OTHER
-}
 
 export const variables = writable(new Map<string, Variable>());
 export const variable_names = writable(new Set<string>(['']));
@@ -21,10 +13,9 @@ variable_names.subscribe((names) => {
 export class Variable {
 	id: string;
 	name: string = '';
-	type?: VarType;
 	value: string = '';
 
-	constructor(name: string, type: VarType | undefined = undefined, value: any = null) {
+	constructor(name: string, value: any = null) {
 		Variable.variable_quantity += 1;
 		this.id =
 			'variable_declaration_' +
@@ -32,21 +23,8 @@ export class Variable {
 				.toFixed()
 				.toString();
 		this.name = name;
-		this.type = type;
 		this.value = value;
 	}
-
-	static CONST_BOX_INFOS: any = {
-		//FIXED_COLOR: 'black',
-		//DRAGGING_COLOR: 'red',
-		//BACKGROUD_COLOR: 'bg-teal-100',
-		//SHADOW_COLOR: 'grey',
-		//SHADOW_BLUR: 5,
-		//FIXED_SHADOW: 0,
-		//DRAGGING_DELTA: 4,
-		BASIC_BOX_SIZE: new Vec2(300, 100)
-		//GAP: 20
-	};
 
 	static variable_quantity = 0;
 }

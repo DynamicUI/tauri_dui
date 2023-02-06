@@ -61,6 +61,7 @@
 		// TODO
 		return true;
 	}
+
 	/*
 
   $: {
@@ -72,10 +73,10 @@
   */
 </script>
 
+<!--style:min-width="{variableDeclarationSize.x}px"-->
+<!--style:min-height="{variableDeclarationSize.y}px"-->
 <div
-	style:width="{variableDeclarationSize.x}px"
-	style:height="{variableDeclarationSize.y}px"
-	class="bg-base-100 flex flex-row rounded-3xl mx-5 justify-center items-center"
+	class="border- mx-5 flex flex-row items-center justify-center rounded-3xl border-2 border-white bg-base-100 p-2"
 >
 	<TextInput
 		bind:input={inputName}
